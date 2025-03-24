@@ -2,7 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import Axios from "axios";
 import VideoPreview from "./preview";
 import { useParams } from "react-router-dom";
-import { UserContext } from "../App";
+import { NotificationContext, UserContext } from "../App";
+import Feedback from "./feedback";
 const API = import.meta.env.VITE_SERVER_URL;
 
 const VideoHistory = () => {
@@ -12,18 +13,30 @@ const VideoHistory = () => {
 
     const [Video, setVideo] = useState(null)
     const { token } = useContext(UserContext)
+    const { setNotification, closeNotification } = useContext(NotificationContext)
+
     const { id } = useParams()
     // Reference to your results container
     const resultsRef = useRef(null);
 
     const getVideoInfos = async () => {
         try {
-            const res = await Axios.get(`${API}/api/videos/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }, // Headers
-                withClimeentials: true, // Ensures cookies (if needed)
-            })
+            const res = await Axios.get(`${API}/api/videos/${id}`, 
+                {
+                    headers: { Authorization: `Bearer ${token}` }, // Headers
+                    withClimeentials: true, // Ensures cookies (if needed)
+                },
+                {
+                    validateStatus: function(status) {
+                        return true;
+                    }
+                },)
             if (res.data.error) {
-                alert(res.data.error)
+                setNotification({
+                    message: res.data.error,
+                    type: "error",
+                    onClose: closeNotification
+                })
             } else {
                 setSummary(res.data.summary)
                 setKeyInsights(res.data.keyInsights)
@@ -123,6 +136,7 @@ const VideoHistory = () => {
                 })}
             </ol>}
             </div>
+            < Feedback/>
           </div>
         )}
       </div>

@@ -2,12 +2,13 @@ import React, { useContext, useState } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
-import { UserContext } from "../App.jsx";
+import { NotificationContext, UserContext } from "../App.jsx";
 const API = import.meta.env.VITE_SERVER_URL;
 
 const Navbar = ({ user }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { token, refreshUser, setrRefreshUser } = useContext(UserContext)
+  const { setNotification, closeNotification } = useContext(NotificationContext)
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -18,12 +19,19 @@ const Navbar = ({ user }) => {
         const res = await Axios.post(`${API}/logout/`, {
             headers: { Authorization: `Bearer ${token}` }, // Headers
             withClimeentials: true, // Ensures cookies (if needed)
+            validateStatus: function(status) {
+                return true
+            }
         })
         const data = res.data
         localStorage.removeItem("user");
         localStorage.removeItem("token");
         setrRefreshUser(!refreshUser)
-        alert(data.message)
+        setNotification({
+            message: data.message,
+            type: "normal",
+            onClose: closeNotification
+        })
     } catch(err) {
         console.error(err)
     }
@@ -50,12 +58,12 @@ const Navbar = ({ user }) => {
             {/* Desktop Navigation */}
             <div className="hidden md:ml-15 md:flex md:items-center">
                 <Link to={"/analyze"}>
-                    <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium bg-lime-100 text-lime-700 hover:bg-lime-200">
+                    <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium cursor-pointer bg-lime-100 text-lime-700 hover:bg-lime-200">
                         Summarize
                     </button>
                 </Link>
                 <Link to={"/videos"}>
-                    <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium bg-lime-100 text-lime-700 hover:bg-lime-200">
+                    <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium cursor-pointer bg-lime-100 text-lime-700 hover:bg-lime-200">
                         Videos
                     </button>
                 </Link>
@@ -65,19 +73,19 @@ const Navbar = ({ user }) => {
           {/* Auth buttons */}
           <div className="hidden md:flex md:items-center md:ml-6">
             {user ? (
-              <button className="px-4 py-2 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              <button className="px-4 py-2 rounded-md border border-gray-300 text-sm font-medium cursor-pointer text-gray-700 hover:bg-gray-50"
               onClick={handleLogout}>
                 Logout
               </button>
             ) : (
               <div className="flex space-x-3">
                 <Link to={"/login"}>
-                    <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium bg-lime-100 text-lime-700 hover:bg-lime-200">
+                    <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium cursor-pointer bg-lime-100 text-lime-700 hover:bg-lime-200">
                     Log in
                     </button>
                 </Link>
                 <Link to={"/signup"}>
-                    <button className="px-4 py-2 rounded-md border border-transparent text-sm font-medium text-white bg-lime-600 hover:bg-lime-700">
+                    <button className="px-4 py-2 rounded-md border border-transparent text-sm font-medium cursor-pointer text-white bg-lime-600 hover:bg-lime-700">
                     Sign up
                     </button>
                 </Link>

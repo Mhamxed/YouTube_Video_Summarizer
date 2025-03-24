@@ -1,5 +1,7 @@
+import { Trash2 } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import DeleteButtonDropdown from './more';
 
 const VideoCard = ({ video }) => {
 
@@ -39,14 +41,14 @@ const VideoCard = ({ video }) => {
             {video.channelName}
           </span>
           <div className="flex items-center mt-1 text-xs text-gray-500">
-            <span>{video.views} views</span>
+            <span>{video.viewCount} views</span>
             <span className="mx-1">•</span>
             <span>{video.timestamp}</span>
           </div>
         </div>
         
         {/* Action buttons */}
-        <div className="flex justify-between mt-3 pt-3 border-t border-gray-100">
+        <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-100">
           <Link to={`/videos/${video.id}`}>
             <button className="text-lime-600 hover:text-lime-800 text-sm font-medium flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -55,12 +57,7 @@ const VideoCard = ({ video }) => {
                 View Summary
             </button>
           </Link>
-          <button className="text-gray-500 hover:text-gray-700 text-sm flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-            </svg>
-            More
-          </button>
+          <DeleteButtonDropdown id={video.id}/>
         </div>
       </div>
     </div>

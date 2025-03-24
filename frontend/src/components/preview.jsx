@@ -1,4 +1,5 @@
-function VideoPreview({ title, channelName, thumbnailUrl, views, timestamp, duration, handleGenerate}) {
+import { motion } from "framer-motion";
+function VideoPreview({ title, channelName, thumbnailUrl, views, timestamp, duration, handleGenerate, handlecancel, isGenerating, isWritting}) {
 
   return (
     <div className="inset-0 flex justify-center items-center">
@@ -39,13 +40,25 @@ function VideoPreview({ title, channelName, thumbnailUrl, views, timestamp, dura
         </div>
         
         {/* Action buttons */}
-        { handleGenerate && <div className="flex justify-center mt-3 pt-3 border-t border-gray-100">
-            <button className="flex justify-center items-center px-4 py-2 rounded-md border border-transparent text-sm font-medium text-white bg-lime-600 hover:bg-lime-700" onClick={() => handleGenerate()}>
+        { handleGenerate && <div className="flex justify-center mt-3 pt-3 border-t gap-2 border-gray-100">
+            {(!isGenerating && !isWritting) && <button className="flex justify-center items-center px-4 py-2 rounded-md border border-transparent text-sm font-medium text-white bg-lime-600 hover:bg-lime-700" onClick={() => handleGenerate()}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Generate Summary
-          </button>
+          </button>}
+          { isGenerating && <button className="px-6 py-3 rounded-lg font-medium text-sm transition-colors duration-150 disabled:opacity-70 disabled:cursor-not-allowed bg-lime-600 hover:bg-lime-700 text-white">
+                <div className="flex items-center gap-2">
+                <motion.div
+                    className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                />
+                <span>Processing</span>
+                </div>                
+                </button>}
+          {(handlecancel && !isWritting) && <button onClick={() => handlecancel()}
+          className="px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-150 bg-gray-200 text-gray-500">
+            Cancel
+          </button>}
         </div> }
       </div>
     </div>

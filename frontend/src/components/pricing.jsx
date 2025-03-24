@@ -5,9 +5,9 @@ const tiers = [
     name: 'Hobby',
     id: 'tier-hobby',
     href: '#',
-    priceMonthly: '$29',
+    priceMonthly: '$19',
     description: "The perfect plan if you're just getting started with our product.",
-    features: ['Upto 1000 summaries per month', 'Advanced analytics', '24-hour support response time'],
+    features: ['Up to 100 summaries per month', 'Advanced analytics', '24-hour support response time'],
     featured: false,
   },
   {

@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import Loading from './loading';
+import Feedback from './feedback';
 
-const ResultsDisplay = ({ summary, keyInsights, YouTubeInput, showResults }) => {
+const ResultsDisplay = ({ summary, keyInsights, YouTubeInput, showResults, setshowResults }) => {
     const [completedParagraphs, setCompletedParagraphs] = useState([]);
     const [currentParagraph, setCurrentParagraph] = useState('');
     const [paragraphIndex, setParagraphIndex] = useState(0);
     const [charIndex, setCharIndex] = useState(0);
 
-    const [showKeynsights, setShowKeynsights] = useState(false);
+    const [showKeyinsights, setShowKeyinsights] = useState(false);
     const [completedKeyInsights, setCompletedKeyInsights] = useState([]);
     const [currentKeyInsight, setCurrentKeyInsight] = useState('');
-    const [keyInsighIndex, setKeyInsighIndex] = useState(0);
+    const [keyInsightIndex, setKeyInsightIndex] = useState(0);
 
   // Typewriter effect for paragraphs
   useEffect(() => {
     if (!showResults || paragraphIndex >= summary.length) {
-        if (paragraphIndex >= summary.length) {
-            setShowKeynsights(true)
+        if (completedParagraphs.length >= summary.length) {
+            setShowKeyinsights(true)
+            setshowResults(false)
             return
         }
         return
@@ -28,7 +30,7 @@ const ResultsDisplay = ({ summary, keyInsights, YouTubeInput, showResults }) => 
       // Still typing the current paragraph
       const typingSpeed = 
         currentFullParagraph[charIndex] === '.' ? 150 : 
-        currentFullParagraph[charIndex] === ',' ? 100 : 25;
+        currentFullParagraph[charIndex] === ',' ? 100 : 5;
       
       const timer = setTimeout(() => {
         setCurrentParagraph(prev => prev + currentFullParagraph[charIndex]);
@@ -54,15 +56,21 @@ const ResultsDisplay = ({ summary, keyInsights, YouTubeInput, showResults }) => 
 
     // Typewriter effect for keyinsights
     useEffect(() => {
-        if (!showKeynsights || keyInsighIndex >= keyInsights.length) return;
+        if (!showKeyinsights || keyInsightIndex >= keyInsights.length) {
+            if (keyInsightIndex >= keyInsights.length) {
+                setShowKeyinsights(false)
+                return
+            }
+            return
+        };
         
-        const currentFullKeyInsight = keyInsights[keyInsighIndex];
+        const currentFullKeyInsight = keyInsights[keyInsightIndex];
         
         if (charIndex < currentFullKeyInsight.length) {
           // Still typing the current paragraph
           const typingSpeed = 
           currentFullKeyInsight[charIndex] === '.' ? 150 : 
-          currentFullKeyInsight[charIndex] === ',' ? 100 : 5;
+          currentFullKeyInsight[charIndex] === ',' ? 100 : 25;
           
           const timer = setTimeout(() => {
             setCurrentKeyInsight(prev => prev + currentFullKeyInsight[charIndex]);
@@ -78,12 +86,12 @@ const ResultsDisplay = ({ summary, keyInsights, YouTubeInput, showResults }) => 
             // Reset for the next paragraph
             setCurrentKeyInsight('');
             setCharIndex(0);
-            setKeyInsighIndex(prev => prev + 1);
+            setKeyInsightIndex(prev => prev + 1);
           }, 500); // Pause between paragraphs
           
           return () => clearTimeout(timer);
         }
-      }, [showKeynsights, keyInsighIndex, charIndex, keyInsights]);
+      }, [showKeyinsights, keyInsightIndex, charIndex, keyInsights]);
   
   
   return (
@@ -111,14 +119,14 @@ const ResultsDisplay = ({ summary, keyInsights, YouTubeInput, showResults }) => 
             )}
             {/* <span className="inline-block w-2 h-5 bg-lime-600 ml-1 animate-pulse"></span> */}
             </div>
-            { showKeynsights && <h2 className="text-xl font-bold text-black mb-4">Key Insights</h2> }
+            { showKeyinsights && <h2 className="text-xl font-bold text-black mb-4">Key Insights</h2> }
             <div className="font-mono whitespace-pre-line ml-4">
-            { showKeynsights && <ol className="list-decimal pl-6">
+            { showKeyinsights && <ol className="list-decimal pl-6">
                 {completedKeyInsights.map((keyinsight, index) => {
                     return <li key={index} className="mb-4">{keyinsight}</li>
                 })}
                 {/* Display currently typing paragraph with cursor */}
-                {keyInsighIndex < keyInsights.length && (
+                {keyInsightIndex < keyInsights.length && (
                 <li>
                     {currentKeyInsight}
                 </li>
@@ -128,6 +136,7 @@ const ResultsDisplay = ({ summary, keyInsights, YouTubeInput, showResults }) => 
             <div className='ml-5 mt-1'>
                 <Loading/>
             </div>
+            {(!showKeyinsights && !showResults) && <Feedback />}
           </div>
         )}
       </div>

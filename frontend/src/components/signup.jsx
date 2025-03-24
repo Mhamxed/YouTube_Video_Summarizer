@@ -1,11 +1,15 @@
 import { Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { NotificationContext } from '../App';
 const API = import.meta.env.VITE_SERVER_URL;
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { setNotification, closeNotification } = useContext(NotificationContext)
+  const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -33,8 +37,13 @@ const Signup = () => {
         })
         const data = res.data
         if (data.message) {
-            alert(data.message)
+            setNotification({
+                message: data.message,
+                type: "normal",
+                onClose: closeNotification
+            })
         }
+        navigate("./login")
     } catch(err) {
         console.error(err)
     }

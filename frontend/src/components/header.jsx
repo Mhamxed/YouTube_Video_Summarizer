@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom" 
+import { motion } from "framer-motion"
 
 export default function Header() {
     return (
-    <div className="flex flex-col items-center text-center border-b-1 py-24 border-gray-300">  
+    <motion.div 
+    initial={{ y: 30, opacity: 0}}
+    animate={{ y: 0, opacity: 1}}
+    className="flex flex-col items-center text-center border-b-1 py-24 border-gray-300">  
         <button className="flex self-center gap-2 text-sm font-semibold border-1 border-gray-200 rounded-full cursor-pointer px-2 py-1 hover:border-gray-300 text-gray-900">
             Announcing our next round of funding
             <p className="text-sm font-semibold text-lime-600">Read more</p>
@@ -25,6 +29,6 @@ export default function Header() {
             Videos <span aria-hidden="true">&rarr;</span>
             </Link>
         </div>
-    </div>
+    </motion.div>
     )
 }

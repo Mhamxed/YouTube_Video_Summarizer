@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect, useContext } from 'react';
 import { MoreVertical, Trash2 } from 'lucide-react';
 import Axios from 'axios';
-import { UserContext } from '../App';
+import { NotificationContext, UserContext } from '../App';
 const API = import.meta.env.VITE_SERVER_URL;
 
 export default function DeleteButtonDropdown({ id }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { token, setrRefreshVideos, refreshVideos } = useContext(UserContext)
+  const { setNotification, closeNotification } = useContext(NotificationContext)
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -39,10 +40,18 @@ export default function DeleteButtonDropdown({ id }) {
         }
       })
       if (res.data.error) {
-        alert(res.data.error)
+        setNotification({
+          message: res.data.error,
+          type: "error",
+          onClose: closeNotification
+        })
       } if (res.data.message) {
         setrRefreshVideos(!refreshVideos)
-        alert(res.data.message)
+        setNotification({
+          message: res.data.message,
+          type: "normal",
+          onClose: closeNotification
+      })
       }
     } catch(e) {
       console.error(e)

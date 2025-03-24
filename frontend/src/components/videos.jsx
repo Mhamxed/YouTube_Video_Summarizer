@@ -1,23 +1,32 @@
 import { useContext, useEffect, useState } from "react";
 import VideoCard from "./video";
 import Axios from "axios";
-import { UserContext } from "../App";
+import { NotificationContext, UserContext } from "../App";
 const API = import.meta.env.VITE_SERVER_URL;
 
 
 // Grid component to display multiple video cards
 const VideoCardGrid = () => {
     const [videos, setVideos] = useState([])
-    const { token } = useContext(UserContext)
+    const { token, refreshVideos } = useContext(UserContext)
+    const { setNotification, closeNotification } = useContext(NotificationContext)
+
 
     const getVideos = async () => {
         try {
             const res = await Axios.get(`${API}/api/videos`, {
                 headers: { Authorization: `Bearer ${token}` }, // Headers
                 withClimeentials: true, // Ensures cookies (if needed)
+                validateStatus: function(status) {
+                    return true
+                }
             })
             if (res.data.error) {
-                console.error(res.data.error)
+                setNotification({
+                    message: res.data.error,
+                    type: "error",
+                    onClose: closeNotification
+                })
             } else {
                 setVideos(res.data.videos)
             }
@@ -28,7 +37,7 @@ const VideoCardGrid = () => {
 
     useEffect(() => {
         getVideos()
-    }, [])
+    }, [refreshVideos])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

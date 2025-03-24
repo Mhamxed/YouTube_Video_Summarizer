@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion'
 
-const YouTubeInput = ({ handlePreview, setYoutubeLink, youtubeLink, preview, VideoPreview }) => {
+const YouTubeInput = ({ handlePreview, setYoutubeLink, youtubeLink, preview, VideoPreview, isPreviewLoading }) => {
   const [isValid, setIsValid] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
-  const [isPreviewLoading, setIsPreviewLoading] = useState(false)
 
   const handleInputChange = (e) => {
     const link = e.target.value;
@@ -38,7 +38,7 @@ const YouTubeInput = ({ handlePreview, setYoutubeLink, youtubeLink, preview, Vid
               } focus:outline-none text-gray-700`}
             />
             
-            <button
+            {!isPreviewLoading && <button
               onClick={handlePreview}
               disabled={!youtubeLink || !isValid}
               className={`px-6 py-3 rounded-r-lg font-medium text-sm transition-colors duration-150 ${
@@ -48,8 +48,16 @@ const YouTubeInput = ({ handlePreview, setYoutubeLink, youtubeLink, preview, Vid
               }`}
             >
               Preview
-            </button>
-          </div>
+            </button>}
+            
+            {isPreviewLoading && <button className="px-6 py-3 rounded-r-lg font-medium text-sm transition-colors duration-150 disabled:opacity-70 disabled:cursor-not-allowed bg-lime-600 hover:bg-lime-700 text-white">
+                <div className="flex items-center gap-2">
+                <motion.div
+                    className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                />
+                </div>                
+                </button> }
+        </div>
           
           {!isValid && (
             <p className="mt-2 text-sm text-red-600">

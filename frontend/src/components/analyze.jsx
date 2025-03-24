@@ -1,12 +1,8 @@
 import Axios from "axios";
 import { useContext, useState } from "react";
-import { UserContext } from "../App.jsx";
+import { NotificationContext, UserContext } from "../App.jsx";
 import VideoPreview from "./preview.jsx";
-import Summary from "./summary.jsx";
-import KeyInsights from "./keyinsights.jsx";
 import YouTubeInput from "./youtubeinput.jsx"; 
-import YouTubeSummary from "./summary.jsx";
-import Loading from "./loading.jsx";
 import ResultsDisplay from "./result.jsx";
 const API = import.meta.env.VITE_SERVER_URL;
 
@@ -22,18 +18,36 @@ function Analyze() {
     const [channelName, setChannelName] = useState("")
     const [timestamp, setTimestamp] = useState("")
     const [videoId, setVideoId] = useState(null)
+
+    const [isPreviewLoading, setIsPreviewLoading] = useState(false)
+    const [isGenerating, setIsGenerating] = useState(false)
+    const [isWritting, setIsWritting] = useState(false)
+
+    const { setNotification, closeNotification } = useContext(NotificationContext)
+
     
     const handlePreview = async (e) => {
         e.preventDefault()
         try {
-            const res = await Axios.post(`${API}/api/video/analyze`, { youtubeLink }, {
+            setIsPreviewLoading(true)
+            const res = await Axios.post(`${API}/api/video/analyze`, 
+                { youtubeLink }, {
                 headers: { Authorization: `Bearer ${token}` }, // Headers
                 withCredentials: true, // Ensures cookies (if needed)
+                validateStatus: function(status) {
+                    return true;
+                }
             })
 
             if (res.data.error) {
-                alert(res.data.error)
+                setIsPreviewLoading(false)
+                setNotification({ 
+                    message: res.data.error,
+                    type: "error",
+                    onClose: closeNotification
+                })
             } else {
+                setIsPreviewLoading(false)
                 setThumbnailUrl(res.data.thumbnailUrl)
                 setTitle(res.data.title)
                 setDuration(res.data.duration)
@@ -50,17 +64,61 @@ function Analyze() {
 
     const handleGenerate = async () => {
         try {
-            const res = await Axios.post(`${API}/api/video/generate`, { videoId }, {
+            setIsGenerating(true)
+            const res = await Axios.post(`${API}/api/video/generate`, 
+                { videoId }, {
                 headers: { Authorization: `Bearer ${token}` }, // Headers
                 withCredentials: true, // Ensures cookies (if needed)
+                validateStatus: function(status) {
+                    return true;
+                }
             })
 
             if (res.data.error) {
-                alert(res.data.error)
+                setIsGenerating(false)
+                setNotification({ 
+                    message: res.data.error,
+                    type: "error",
+                    onClose: closeNotification
+                })
             } else {
+                setIsGenerating(false)
                 setshowResults(true)
                 setSummary(res.data.summary)
                 setKeyInsights(res.data.keyInsights)
+                setIsWritting(true)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const handleCancel = async () => {
+        try {
+            const res = await Axios.post(`${API}/api/video/generate/cancel`, 
+                { videoId }, {
+                headers: { Authorization: `Bearer ${token}` }, // Headers
+                withCredentials: true, // Ensures cookies (if needed)
+            },
+            {
+                validateStatus: function(status) {
+                    return true;
+                }
+            })
+
+            if (res.data.error) {
+                setNotification({ 
+                    message: res.data.error,
+                    type: "error",
+                    onClose: closeNotification
+                })
+            } else {
+                setNotification({ 
+                    message: res.data.message,
+                    type: "normal",
+                    onClose: closeNotification
+                })
+                setPreview(false)
             }
         } catch (e) {
             console.error(e)
@@ -69,23 +127,32 @@ function Analyze() {
 
     return (
         <div className="flex flex-col flex-grow gap-y-[1rem]">
-            <ResultsDisplay summary={summary} keyInsights={keyInsights} YouTubeInput={<YouTubeInput 
-            youtubeLink={youtubeLink} 
-            setYoutubeLink={setYoutubeLink} 
-            handlePreview={handlePreview} 
-            preview={preview}
-            VideoPreview={
-                <VideoPreview 
-                timestamp={timestamp} 
-                thumbnailUrl={thumbnailUrl} 
-                title={title} 
-                duration={duration} 
-                views={viewCount} 
-                channelName={channelName}
-                handleGenerate={handleGenerate}/>
-            }
+            <ResultsDisplay 
+                summary={summary} 
+                keyInsights={keyInsights} 
+                YouTubeInput={
+                <YouTubeInput 
+                    youtubeLink={youtubeLink} 
+                    setYoutubeLink={setYoutubeLink} 
+                    handlePreview={handlePreview} 
+                    preview={preview}
+                    isPreviewLoading={isPreviewLoading}
+                    VideoPreview={
+                        <VideoPreview 
+                        timestamp={timestamp} 
+                        thumbnailUrl={thumbnailUrl} 
+                        title={title} 
+                        duration={duration} 
+                        views={viewCount} 
+                        channelName={channelName}
+                        handleGenerate={handleGenerate}
+                        handlecancel={handleCancel}
+                        isGenerating={isGenerating}
+                        isWritting={isWritting}/>
+                    }
             />}
-            showResults={showResults}/>
+                showResults={showResults}
+                setshowResults={setshowResults}/>
         </div>
     )
 }

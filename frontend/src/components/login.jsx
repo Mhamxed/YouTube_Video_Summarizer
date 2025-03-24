@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
-import { Eye, EyeOff, ImageOff } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import Axios from "axios";
 import { useContext, useState } from "react";
-import { UserContext } from '../App';
+import { NotificationContext, UserContext } from '../App';
 const API = import.meta.env.VITE_SERVER_URL;
 
 function Login() {
@@ -10,6 +10,9 @@ function Login() {
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false);
     const { refreshUser, setrRefreshUser } = useContext(UserContext)
+    const { setNotification, closeNotification } = useContext(NotificationContext)
+    const Navigate = useNavigate()
+
     
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -18,19 +21,40 @@ function Login() {
     const handleLogIn = async (e) => {
         e.preventDefault()
         try {
-            const res = await Axios.post(`${API}/login/`, {username, password}, { withClimeentials: true })
+            const res = await Axios.post(`${API}/login/`, {username, password}, 
+                {   withClimeentials: true, 
+                    validateStatus: function(status) {
+                        return true
+                    } 
+                })
+            if (res.data.error) {
+                setNotification({
+                    message: res.data.message,
+                    type: "error",
+                    onClose: closeNotification
+                })
+            }
+            
+            if (res.data.message) {
+                setNotification({
+                    message: res.data.message,
+                    type: "normal",
+                    onClose: closeNotification
+                })
+            }
             const data = res.data
             localStorage.setItem("user", JSON.stringify(data.user));
             localStorage.setItem("token", data.token);
             setrRefreshUser(!refreshUser)
+            Navigate("/")
         } catch(err) {
             console.error(err)
         }
     }
 
 return (
-    <div className='w-screen h-screen flex flex-col justify-center items-center'>
-    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <div className='h-screen inset-0 flex items-center'>
+    <div className="min-w-sm mx-auto bg-white rounded-xl shadow-md overflow-hidden">
       <div className="relative h-16 bg-gradient-to-r from-lime-600 to-lime-800">
         <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2">
           <div className="bg-lime-700 rounded-full p-3 shadow-lg">
@@ -83,7 +107,7 @@ return (
           
           <button
             type="submit"
-            className="w-full bg-lime-600 hover:bg-lime-700 text-white font-medium py-3 px-4 rounded-md transition duration-150 ease-in-out"
+            className="w-full bg-lime-600 hover:bg-lime-700 text-white font-medium cursor-pointer py-3 px-4 rounded-md transition duration-150 ease-in-out"
           >
             Log In
           </button>
