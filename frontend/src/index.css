@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+    --shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    --bg: oklch(0.928 0.006 264.531);
+}
+
+@layer base {
+    /* button {
+        background: white;
+        border-radius: 8px;
+        font-weight: bold;
+        padding: 10px;
+        border: 0.3px solid black;
+        cursor: pointer;
+    } */
+
+    /* form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 2rem;
+        border: 0.5px solid black;
+        align-items: center;
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+        margin: 3rem 20rem;
+    }
+
+    input {
+        min-width: 15rem;
+        padding-left: 1rem;
+        height: 2rem;
+        width: 30rem;
+        border-radius: 0.5rem;
+        border: 1px solid black;
+    }
+
+    h1 {
+        font-weight: bold;
+        font-size: 1.3rem;
+    } */
+
+}
