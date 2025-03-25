@@ -6,9 +6,10 @@ import YouTubeInput from "./youtubeinput.jsx";
 import ResultsDisplay from "./result.jsx";
 const API = import.meta.env.VITE_SERVER_URL;
 
-function Analyze() {
+function Summarize() {
     const { token, summary, setSummary, keyInsights, setKeyInsights } = useContext(UserContext)
     const [showResults, setshowResults] = useState(false)
+    const [showKeyinsights, setShowKeyinsights] = useState(false);
     const [youtubeLink, setYoutubeLink] = useState("")
     const [preview, setPreview] = useState(false)
     const [thumbnailUrl, setThumbnailUrl] = useState("")
@@ -24,13 +25,12 @@ function Analyze() {
     const [isWritting, setIsWritting] = useState(false)
 
     const { setNotification, closeNotification } = useContext(NotificationContext)
-
     
     const handlePreview = async (e) => {
         e.preventDefault()
         try {
             setIsPreviewLoading(true)
-            const res = await Axios.post(`${API}/api/video/analyze`, 
+            const res = await Axios.post(`${API}/api/video/summarize`, 
                 { youtubeLink }, {
                 headers: { Authorization: `Bearer ${token}` }, // Headers
                 withCredentials: true, // Ensures cookies (if needed)
@@ -152,9 +152,11 @@ function Analyze() {
                     }
             />}
                 showResults={showResults}
-                setshowResults={setshowResults}/>
+                setshowResults={setshowResults}
+                showKeyinsights={showKeyinsights}
+                setShowKeyinsights={setShowKeyinsights}/>
         </div>
     )
 }
 
-export default Analyze;
+export default Summarize;

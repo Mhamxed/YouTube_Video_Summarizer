@@ -7,7 +7,7 @@ import VideoCardGrid from "./components/videos.jsx";
 import Navbar from "./components/navbar.jsx";
 import Footer from "./components/footer.jsx";
 import NotFound from "./components/404.jsx";
-import Analyze from "./components/analyze.jsx";
+import Summarize from "./components/summarize.jsx";
 import VideoHistory from "./components/videohistory.jsx";
 import Home from "./components/home.jsx";
 import Toast from "./components/toast.jsx";
@@ -75,7 +75,7 @@ function App() {
               <Route path="/login" element={<Login user={user}/>} />
               <Route path="/signup" element={<Signup user={user}/>} />
               <Route path="/videos" element={ <VideoCardGrid />} />
-              <Route path="/analyze" element={ <Analyze /> } />
+              <Route path="/summerize" element={ <Summarize /> } />
               <Route path="/videos/:id" element={ <VideoHistory /> } />
               <Route path="*" element={ <NotFound /> } />
             </Routes>

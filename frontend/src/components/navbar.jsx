@@ -57,7 +57,7 @@ const Navbar = ({ user }) => {
             
             {/* Desktop Navigation */}
             <div className="hidden md:ml-15 md:flex md:items-center">
-                <Link to={"/analyze"}>
+                <Link to={"/summerize"}>
                     <button className="ml-4 px-3 py-2 rounded-md text-sm font-medium cursor-pointer bg-lime-100 text-lime-700 hover:bg-lime-200">
                         Summarize
                     </button>

@@ -76,6 +76,7 @@ const VideoHistory = () => {
         console.error('Failed to copy text: ', err);
         });
     };
+    
 
   return (
     <div className="md:flex md:justify-center bg-gray-50 min-h-1/2 p-8">
@@ -97,10 +98,10 @@ const VideoHistory = () => {
         {(
           <div className="bg-white rounded-lg shadow-md p-6 md:w-2/3 flex flex-col" ref={resultsRef}>
             { (summary && keyInsights) && (
-                <div className="self-end">
+                <div className="flex justify-between px-2 py-1 gap-2 self-end">
                 <button 
                     onClick={handleCopyResults}
-                    className="px-4 py-2 bg-lime-600 text-white rounded hover:bg-lime-700 transition flex items-center"
+                    className="px-4 py-2 bg-lime-600 text-white rounded hover:bg-lime-700 transition flex items-center cursor-pointer"
                     aria-label="Copy results to clipboard"
                 >
                     <svg 
