@@ -2,11 +2,10 @@
 The YouTube Video Summarizer is a full-stack web application that allows users to input a YouTube video URL and receive an AI-generated summary and key insights from the video content.
 
 ## Features  
-Extracts and summarizes YouTube video transcripts  
+Extracts and summarizes YouTube videos  
 Provides key insights from the video content  
 Clean and user-friendly UI  
 Real-time progress animation  
-Supports multiple languages  
 
 ## Tech Stack  
 - **Frontend:** React, Tailwind CSS, Framer Motion  
@@ -24,36 +23,41 @@ AI-YouTube-Summarizer/
 │   ├── routes/             # API route handlers
 │   ├── controllers/        # Business logic
 │   ├── middleware/         # JWT Authentication & security
-│   ├── services/           # AI processing & YouTube API integration
+│   ├── helpers/            # AI processing & YouTube API integration
 │   ├── app.js              # Main Express app entry point
-│   └── .env                # Environment variables
+│   ├── .gitignore          # ignores node modules & Environment variables
+│   ├── .env                # Environment variables
+│   └── package.json        # backend dependencies & scripts
 │
 ├── frontend/               # React App
 │   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # App pages (Home, Summary, Login, etc.)
-│   │   ├── hooks/          # Custom React Hooks
-│   │   ├── styles/         # Tailwind CSS styles
-│   │   ├── utils/          # Helper functions
-│   │   ├── App.js          # Main React component
-│   │   ├── index.js        # ReactDOM entry point
+│   │   ├── components/     # Reusable UI components & useful pages
+│   │   ├── index.css/      # Tailwind CSS styles
+│   │   ├── main.jsx/       # render the main React component
+│   │   └── App.js          # Main React component
 │   ├── public/             # Static assets
-│   └── .env                # Frontend environment variables
+│   ├── index.html          # holds the root of the page
+│   ├── vite.config.js      # tailwind css config and react config
+│   ├── .gitignore          # ignores node modules & Environment variables
+│   ├── .env                # Environment variables
+│   └── package.json        # frontend dependencies & scripts
 │
-├── README.md               # Project documentation
-├── package.json            # Dependencies & scripts
-├── .gitignore              # Ignored files
-└── LICENSE                 # License file
+└── README.md               # Project documentation
 
 ```
 ## API Endpoints
 
-| API Endpoint                          | Description                                   |
-| ------------------------------------- | --------------------------------------------- |
-| POST /api/video/analyze               | # Submit URL for analysis                     |
-| GET  /api/videos/:id                  | # Get analysis results                        |
-| GET  /api/videos                      | # List previous summaries                     |
-| DELETE /api/videos/:id/delete         | # Delete a video analyses from the database   |
+| API Endpoint                          | Description                                               |
+| ------------------------------------- | --------------------------------------------------------- |
+| POST /signup                          | # Submit user infos and create a user profile for them    |
+| POST /login                           | # Submit username & password for user login               |
+| POST /logout                          | # Submit a logout request and the user logs out           |
+| POST /api/video/summarize             | # Submit URL for video analysis                           |
+| POST /api/video/generate              | # Generates results for the analyzed video                |
+| POST /api/video/generate/cancel       | # Cancels the generation of results                       |
+| GET  /api/videos/:id                  | # Get analysis results                                    |
+| GET  /api/videos                      | # List previous summaries                                 |
+| DELETE /api/videos/:id/delete         | # Delete a video analyses from the database               |
 
 ##  Installation & Setup
 
